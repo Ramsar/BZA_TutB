@@ -1,0 +1,17 @@
+## Unity
+Library/
+Temp/
+
+## MonoDevelop / VS
+*.pidb
+*.sln
+*.userprefs
+*.csproj
+*.unityproj
+
+#[Oo]bj/ ? needed ?
+
+*.orig
+
+
+
