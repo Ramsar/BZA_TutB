@@ -1,8 +1,14 @@
+/// <summary>
+/// Target mob.
+/// This script can be attached to any permanent gameobject, and is responsible for allowing the player to
+/// target different mobs that are in range
+/// </summary>
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic; // for the Lists
 
-public class Targetting : MonoBehaviour {
+public class TargetMob : MonoBehaviour {
 	
 	// Vars
 	#region Vars
@@ -82,21 +88,33 @@ public class Targetting : MonoBehaviour {
 		SelectTarget();
 	}
 	
-	// Change color of selected target
+	/// <summary>
+	/// Selects the target.
+	/// </summary>
 	private void SelectTarget () {
-		selectedTarget.renderer.material.color = Color.red;
+		Transform name  = selectedTarget.FindChild("Name");
+		if (name == null)
+		{
+			Debug.LogError("Could not find the Name on " + selectedTarget.name);
+			return;
+		}
 		
-		// set target of PlayerAttack to the selected target
-		PlayerAttack pa = (PlayerAttack) GetComponent("PlayerAttack");
-		pa.target = selectedTarget.gameObject;
+		name.GetComponent<TextMesh>().text = selectedTarget.GetComponent<Mob>().Name;
+		name.GetComponent<MeshRenderer>().enabled = true;
+		selectedTarget.GetComponent<Mob>().DisplayHealth();
 		
-		
+		Messenger<bool>.Broadcast("show mob vitalbars", true);
 	}
 	
-	// Target not selected
+	/// <summary>
+	/// Deselects the target.
+	/// </summary>
 	private void DeselectTarget () {
-		selectedTarget.renderer.material.color = Color.blue;
+		selectedTarget.FindChild("Name").GetComponent<MeshRenderer>().enabled = false;
+		
 		selectedTarget = null; 
+		
+		Messenger<bool>.Broadcast("show mob vitalbars", false);
 	}
 	
 	// Update is called once per frame
