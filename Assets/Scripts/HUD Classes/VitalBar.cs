@@ -41,7 +41,9 @@ public class VitalBar : MonoBehaviour {
 		}
 		else 
 		{
+			ToggleDisplay(false);
 			Messenger<int, int>.AddListener("mob health update", OnChangeHealthBarSize);
+			Messenger<bool>.AddListener("show mob vitalbars", ToggleDisplay);
 		}
 		
 	}
@@ -57,6 +59,7 @@ public class VitalBar : MonoBehaviour {
 		else 
 		{
 			Messenger<int, int>.RemoveListener("mob health update", OnChangeHealthBarSize);
+			Messenger<bool>.AddListener("show mob vitalbars", ToggleDisplay);
 		}
 	}
 	
@@ -66,10 +69,11 @@ public class VitalBar : MonoBehaviour {
 	public void OnChangeHealthBarSize (int curHealth, int maxHealth) {
 //		Debug.Log("We heard an event:" + curHealth + "/" + maxHealth);
 		_curBarLength = (int) (((float) curHealth / (float) maxHealth) * _maxBarLength);	// this calculates the current bar length
-		_display.pixelInset = new Rect(_display.pixelInset.x,
-									 _display.pixelInset.y, 
-									 _curBarLength,
-									 _display.pixelInset.height);
+//		_display.pixelInset = new Rect(_display.pixelInset.x,
+//									 _display.pixelInset.y, 
+//									 _curBarLength,
+//									 _display.pixelInset.height);
+		_display.pixelInset = CalculatePosition();
 	}
 	
 	/// <summary>
@@ -77,5 +81,47 @@ public class VitalBar : MonoBehaviour {
 	/// </summary>
 	public void SetPlayerHealth (bool b) {
 		_isPlayerHealthBar = b;
+	}
+	
+	/// <summary>
+	/// Calculates the position of the health bar (depending on whether it concers the player or a mob)
+	/// </summary>
+	/// <returns>
+	/// The position.
+	/// </returns>
+	private Rect CalculatePosition () {
+		float yPos = _display.pixelInset.height / 2 - 10;
+		
+		if (!_isPlayerHealthBar)
+		{
+// Ain't working...
+//			float xPos = (_maxBarLength - _curBarLength) - (_maxBarLength / 4 + 10);
+//			Debug.Log("Mob: " + xPos + " " + yPos);
+//			return new Rect(xPos, yPos, _curBarLength, _display.pixelInset.height);
+			
+			return new Rect(_display.pixelInset.x,
+							_display.pixelInset.y, 
+							_curBarLength,
+							_display.pixelInset.height);
+		}
+	
+// Ain't working...
+//		Debug.Log("Player: " + _display.pixelInset.x + " " + yPos);
+//		return new Rect(_display.pixelInset.x, yPos, _curBarLength, _display.pixelInset.height);
+		
+		return new Rect(_display.pixelInset.x,
+						_display.pixelInset.y, 
+						_curBarLength,
+						_display.pixelInset.height);
+	}
+	
+	/// <summary>
+	/// Toggles the display of the vital bar 
+	/// </summary>
+	/// <param name='show'>
+	/// Show.
+	/// </param>
+	private void ToggleDisplay (bool show) {
+		_display.enabled = show;
 	}
 }
