@@ -15,11 +15,13 @@ public class VitalBar : MonoBehaviour {
 	
 	private GUITexture _display;
 	
+	void Awake () {
+		_display = gameObject.GetComponent<GUITexture>();
+	}
+	
 	// Use this for initialization
 	void Start () {
 //		_isPlayerHealthBar = true;
-		
-		_display = gameObject.GetComponent<GUITexture>();
 		
 		_maxBarLength = (int) _display.pixelInset.width;
 		
@@ -90,7 +92,7 @@ public class VitalBar : MonoBehaviour {
 	/// The position.
 	/// </returns>
 	private Rect CalculatePosition () {
-		float yPos = _display.pixelInset.height / 2 - 10;
+//		float yPos = _display.pixelInset.height / 2 - 10;
 		
 		if (!_isPlayerHealthBar)
 		{
