@@ -66,26 +66,34 @@ public class TargetMob : MonoBehaviour {
 	
 	// Target enemy
 	private void TargetEnemy () {
-		if (selectedTarget == null) // if no target is selected, select closest target
+		if (targets.Count == 0)
+			AddAllEnemies();
+		
+		if (targets.Count > 0)
 		{
-			SortTargetsByDistance();	
-			selectedTarget = targets[0]; 
-		}
-		else // if a target is already selected, select next closest target
-		{
-			int index = targets.IndexOf(selectedTarget); // index of currently selected target in targets list
-			if (index < targets.Count - 1) // make sure it isn't the last target
+			if (selectedTarget == null) // if no target is selected, select closest target
 			{
-				index++;
+				SortTargetsByDistance();	
+				selectedTarget = targets[0]; 
 			}
-			else // if the farthest target, select first target in targets list again
+			else // if a target is already selected, select next closest target
 			{
-				index = 0; 	
+				int index = targets.IndexOf(selectedTarget); // index of currently selected target in targets list
+				if (index < targets.Count - 1) // make sure it isn't the last target
+				{
+					index++;
+				}
+				else // if the farthest target, select first target in targets list again
+				{
+					index = 0; 	
+				}
+				DeselectTarget();
+				selectedTarget = targets[index]; 
 			}
-			DeselectTarget();
-			selectedTarget = targets[index]; 
+			SelectTarget();
 		}
-		SelectTarget();
+			
+		
 	}
 	
 	/// <summary>
